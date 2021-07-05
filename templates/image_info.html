@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image info</title>
+</head>
+<body>
+    <a href="{{ url_for('home') }}">Back home</a>
+    <h1>{{ image }}</h1>
+    <img src="{{ url_for('static', filename='uploaded_images/' + image) }}">
+    <h2>Image info:</h2>
+    {% for colors_item in colors_info %}
+        <p>{{ colors_item.color }} - {{ colors_item.appears }} times, ~ {{ colors_item.percent }}%</p>
+    {% endfor %}
+</body>
+</html>
