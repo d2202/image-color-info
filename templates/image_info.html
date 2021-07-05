@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href="{{ url_for('home') }}">Back home</a>
+    <h1>{{ image_path }}</h1>
+    <img src="{{ url_for('static', filename='uploaded_images/' + image_path) }}">
+</body>
+</html>
