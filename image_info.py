@@ -9,7 +9,6 @@ def make_colors_lists():
     # translate hexstring to RGB tuple
     named_colors = {k: tuple(map(int, (v[1:3], v[3:5], v[5:7]), 3*(16,)))
                     for k, v in use_colors.items()}
-    ncol = len(named_colors)
     no_match = named_colors['purple']
 
     # make an array containing the RGB values
@@ -23,8 +22,7 @@ def make_colors_lists():
 
 
 def open_picture(path):
-    # get example picture
-    # TODO: открыть картинку из поля формы.
+    # Convert image to numpy array
     image = Image.open(path)
     img = np.asarray(image)
     return img
@@ -46,27 +44,18 @@ def build_colors_dict(color_names, color_tuples, img):
     return sorted_counts
 
 
-def make_top_10_colors_list(colors):
+def make_top_10_colors_list(all_colors, all_pixels):
     top_10 = []
     # get top 10 most common colors in image
-    keys = list(colors.keys())
+    keys = list(all_colors.keys())
+
     for i in range(10):
         key = keys[i]
-        value = colors[key]
+        value = all_colors[key]
         item = {
             "color": key,
-            "appears": value
+            "appears": value,
+            "percent": round(value / all_pixels * 100, 2)
         }
         top_10.append(item)
     return top_10
-
-# Опционально поиграем с процентиками
-# print(top_10)
-# all_pixels = 0
-# for value in sorted_counts.values():
-#     all_pixels += value
-# print(all_pixels)
-#
-# for item in top_10:
-#     percent = round(item.get('appears') / all_pixels * 100, 2)
-#     print(f"{item.get('color')}, {item.get('appears')} ~ {percent}%")

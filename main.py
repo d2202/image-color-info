@@ -17,7 +17,6 @@ def home():
             return "There is no file in form!"
         img = request.files.get("img")
         secure_path = secure_filename(img.filename)
-        print(secure_path)
         img.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_path))
         return redirect(url_for('show_image_info', filename=secure_path))
     return render_template("index.html")
@@ -37,10 +36,14 @@ def show_image_info(filename):
     # Make dict of colors which appear in our img
     colors_dict = image_info.build_colors_dict(color_names, color_tuples, image_colors_array)
 
-    # Make top 10 of colors in image
-    top_10_colors = image_info.make_top_10_colors_list(colors_dict)
-    # print(top_10_colors)
-    # print(len(top_10_colors))
+    # Sum total pixels in image
+    all_pixels = 0
+    for value in colors_dict.values():
+        all_pixels += value
+
+    # Make top 10 dict of colors in image
+    top_10_colors = image_info.make_top_10_colors_list(colors_dict, all_pixels)
+
     return render_template("image_info.html", image=file, colors_info=top_10_colors)
 
 
