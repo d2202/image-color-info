@@ -4,7 +4,7 @@ from scipy.spatial import cKDTree as KDTree
 from PIL import Image
 
 
-def make_colors_list():
+def make_colors_lists():
     use_colors = colors.cnames
     # translate hexstring to RGB tuple
     named_colors = {k: tuple(map(int, (v[1:3], v[3:5], v[5:7]), 3*(16,)))
@@ -22,11 +22,12 @@ def make_colors_list():
     return color_names, color_tuples
 
 
-def open_picture():
+def open_picture(path):
     # get example picture
     # TODO: открыть картинку из поля формы.
-    racoon = Image.open("coon.jpeg")
-    img = np.asarray(racoon)
+    image = Image.open(path)
+    img = np.asarray(image)
+    return img
 
 
 def build_colors_dict(color_names, color_tuples, img):
@@ -38,6 +39,7 @@ def build_colors_dict(color_names, color_tuples, img):
     # find closest color in tree for each pixel in picture
     dist, idx = tree.query(img, distance_upper_bound=tolerance)
     # count and reattach names
+    ncol = len(color_names)
     counts = dict(zip(color_names, np.bincount(idx.ravel(), None, ncol+1)))
     # sort dict by highest value
     sorted_counts = {key: value for key, value in sorted(counts.items(), key=lambda item: item[1], reverse=True)}
