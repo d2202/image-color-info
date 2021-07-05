@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 import image_info
 
 UPLOAD_FOLDER = './static/uploaded_images'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -13,10 +13,15 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route("/", methods=["POST", "GET"])
 def home():
     if request.method == "POST":
-        if "img" not in request.files:
-            return "There is no file in form!"
         img = request.files.get("img")
+        if not img:
+            return """<h1>There is no file in form!</h1>
+                <a href="/">Back home</a>"""
         secure_path = secure_filename(img.filename)
+        extension = secure_path[-4:].replace(".", "")
+        if extension not in ALLOWED_EXTENSIONS:
+            return """<h1>File extension not allowed. Please use one of these: png, jpg, jpeg.</h1>
+                            <a href="/">Back home</a>"""
         img.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_path))
         return redirect(url_for('show_image_info', filename=secure_path))
     return render_template("index.html")
